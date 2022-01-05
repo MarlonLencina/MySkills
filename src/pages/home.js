@@ -1,13 +1,12 @@
-import React, {Fragment, useState} from "react";
+import React, {Fragment, useEffect, useState} from "react";
 import { 
     View,
     Text,
     StyleSheet,
     TextInput,
     Platform,
-    TouchableOpacity,
     FlatList,
-    ScrollView,
+    StatusBar
 } from "react-native";
 
 import { Button } from "../components/button";
@@ -23,11 +22,34 @@ export const Home = () => {
         )
     }
 
+    const [greetings, setGreetings] = useState('')
+
+    useEffect(() => {
+      const currentHour = +new Date().getHours()
+
+      if(currentHour < 12){
+        return setGreetings('Good Morning!')
+      } else if (currentHour >= 12 && currentHour < 18){ 
+        return setGreetings('Good Afternoon!')
+
+      } else {
+        return setGreetings('Good Night!')
+
+      }
+
+    }, [])
+
   return (
     <>
     <View
     style={styles.container}>
+
       <Text style={styles.PrimaryTitle}>Welcome, Marlon</Text>
+
+
+    <Text style={styles.greetings}>
+      {greetings}
+    </Text>
 
       <TextInput
       style={styles.input}
@@ -44,6 +66,7 @@ export const Home = () => {
       }]}>
         My Skills
     </Text>
+
 
       <FlatList data={Skills}
       keyExtractor={Item => Item}
@@ -75,5 +98,8 @@ const styles = StyleSheet.create({
         padding: Platform.OS === 'ios' ? 15 : 10,
         marginTop: 20,
         borderRadius: 7
+    },
+    greetings: {
+      color: '#fff'
     }
 })
