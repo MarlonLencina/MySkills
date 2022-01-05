@@ -12,14 +12,32 @@ import {
 import { Button } from "../components/button";
 import { SkillCard } from "../components/skillCard";
 
+interface ISkillData {
+  id: string,
+  name: string
+}
+
 export const Home = () => {
 
     const [newSkill, setNewSkill] = useState('')
-    const [Skills, setSkills] = useState([])
+    const [Skills, setSkills] = useState<ISkillData[]>([])
 
     const handleNewAddSkil = () => {
-        setSkills((oldState) => [...oldState, newSkill]
+      const data = {
+        id: String(new Date().getTime()),
+        name: newSkill
+      }
+
+        setSkills((oldState) => [...oldState, data]
         )
+
+    }
+
+    const handleAddRemoveSKill = (id: String) => {
+      setSkills(oldState => oldState.filter(skill => {
+          return skill.id != id
+        })
+      )
     }
 
     const [greetings, setGreetings] = useState('')
@@ -59,6 +77,7 @@ export const Home = () => {
 
       <Button
       onPress={handleNewAddSkil}
+      title="Add"
       />
 
       <Text style={[styles.PrimaryTitle, {
@@ -69,9 +88,12 @@ export const Home = () => {
 
 
       <FlatList data={Skills}
-      keyExtractor={Item => Item}
+      keyExtractor={Item => Item.id}
       renderItem={({ item }) => (
-        <SkillCard key={item}>{item}</SkillCard>
+        <SkillCard 
+        onPress={() => handleAddRemoveSKill(item.id)}
+        key={item.id}
+        skill={item.name}></SkillCard>
       )}/>
 
     </View>
